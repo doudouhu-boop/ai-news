@@ -81,7 +81,6 @@ def fetch_quotes_via_sdk():
                 "turnover_display": f"{float(q.turnover) / 1e8:.1f}亿",
             })
 
-        # 按成交额降序
         results.sort(key=lambda x: x["turnover"], reverse=True)
         return results
     except Exception as e:
@@ -95,7 +94,6 @@ def fetch_quotes_via_api():
     无需认证，作为 Longbridge SDK 的 fallback
     """
     try:
-        # 恒指 + 恒生科技 + 国企指数 + 港股主要成交股
         url = (
             "https://push2.eastmoney.com/api/qt/clist/get"
             "?fid=f6&po=1&pz=30&pn=1&np=1"
@@ -134,50 +132,17 @@ def fetch_market_data():
     print("  Trying Longbridge SDK...")
     data = fetch_quotes_via_sdk()
     if data:
-        print(f"  ✓ Got {len(data)} quotes from Longbridge")
+        print(f"  Got {len(data)} quotes from Longbridge")
         return json.dumps(data, ensure_ascii=False, indent=2), "longbridge"
 
     print("  Trying EastMoney fallback...")
     data = fetch_quotes_via_api()
     if data:
-        print(f"  ✓ Got {len(data)} quotes from EastMoney")
+        print(f"  Got {len(data)} quotes from EastMoney")
         return json.dumps(data, ensure_ascii=False, indent=2), "eastmoney"
 
-    print("  ✗ All data sources failed")
+    print("  All data sources failed")
     return None, None
-
-
-def fetch_news_via_sdk():
-    """通过 Longbridge SDK 获取港股新闻"""
-    try:
-        from longbridge.openapi import Config
-        import subprocess
-
-        # 尝试 CLI 获取新闻
-        result = subprocess.run(
-            ["longbridge", "news", "700.HK", "--limit", "5"],
-            capture_output=True, text=True, timeout=30,
-            env={**os.environ}
-        )
-        news_text = result.stdout.strip() if result.returncode == 0 else ""
-
-        # 补充更多标的新闻
-        for symbol in ["9988.HK", "3690.HK", "1810.HK"]:
-            try:
-                r = subprocess.run(
-                    ["longbridge", "news", symbol, "--limit", "3"],
-                    capture_output=True, text=True, timeout=15,
-                    env={**os.environ}
-                )
-                if r.returncode == 0:
-                    news_text += "\n" + r.stdout.strip()
-            except Exception:
-                pass
-
-        return news_text if news_text else None
-    except Exception as e:
-        print(f"[WARN] News fetch failed: {e}", file=sys.stderr)
-        return None
 
 
 def build_prompt(quote_text, news_text, session_type):
@@ -227,16 +192,14 @@ def build_prompt(quote_text, news_text, session_type):
 def call_babbage_agent(prompt):
     """调用 Longbridge Babbage Agent API"""
 
+    # 根据官方文档，使用 x-agent-key 认证
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {BABBAGE_API_KEY}",
+        "x-agent-key": BABBAGE_API_KEY,
     }
 
     payload = {
-        "inputs": {},
         "query": prompt,
-        "response_mode": "blocking",
-        "user": "github-actions-bot",
     }
 
     print(f"  POST {BABBAGE_AGENT_URL}")
@@ -250,31 +213,30 @@ def call_babbage_agent(prompt):
     print(f"  Response status: {resp.status_code}")
 
     if resp.status_code != 200:
-        # 尝试不同的请求格式（有些 Agent 平台格式不同）
-        payload_alt = {
-            "message": prompt,
-            "user": "github-actions-bot",
-        }
-        resp = requests.post(
-            BABBAGE_AGENT_URL,
-            headers=headers,
-            json=payload_alt,
-            timeout=180,
-        )
-        print(f"  Alt response status: {resp.status_code}")
+        print(f"  Response body: {resp.text[:500]}", file=sys.stderr)
 
     resp.raise_for_status()
 
     data = resp.json()
-    # 尝试多种响应格式
-    answer = (
-        data.get("answer")
-        or data.get("output")
-        or data.get("result")
-        or data.get("data", {}).get("answer")
-        or data.get("data", {}).get("output")
-        or json.dumps(data, ensure_ascii=False)
-    )
+    # Babbage API 返回格式: {outputs: {output: {text: "..."}}}
+    answer = ""
+    if "outputs" in data:
+        output = data["outputs"]
+        if isinstance(output, dict) and "output" in output:
+            inner = output["output"]
+            if isinstance(inner, dict) and "text" in inner:
+                answer = inner["text"]
+            else:
+                answer = json.dumps(inner, ensure_ascii=False)
+        else:
+            answer = json.dumps(output, ensure_ascii=False)
+    elif "answer" in data:
+        answer = data["answer"]
+    elif "result" in data:
+        answer = data["result"]
+    else:
+        answer = json.dumps(data, ensure_ascii=False)
+
     return answer
 
 
@@ -296,7 +258,6 @@ def extract_article_json(raw_answer):
         parsed = json.loads(text)
         return parsed
     except json.JSONDecodeError:
-        # 尝试找 JSON 子串
         start = text.find("{")
         end = text.rfind("}") + 1
         if start >= 0 and end > start:
@@ -312,7 +273,6 @@ def save_article(article_data, raw_answer, hk_now, session_type, source):
     os.makedirs("articles", exist_ok=True)
 
     date_str = hk_now.strftime("%Y-%m-%d")
-    time_str = hk_now.strftime("%H%M")
     session_map = {"盘中": "intraday", "午评": "midday", "收盘": "close"}
     session_en = session_map.get(session_type, "unknown")
 
@@ -334,7 +294,7 @@ def save_article(article_data, raw_answer, hk_now, session_type, source):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f"  ✓ Saved: {filename}")
+    print(f"  Saved: {filename}")
     return filename
 
 
@@ -347,45 +307,36 @@ def main():
     print(f"{'='*50}")
 
     # Step 1: 获取行情
-    print("\n[1/3] 获取行情数据...")
+    print("\n[1/2] 获取行情数据...")
     quote_text, source = fetch_market_data()
     if not quote_text:
         print("ERROR: 无法获取行情数据，退出")
         sys.exit(1)
 
-    # Step 2: 获取新闻（可选）
-    print("\n[2/3] 获取新闻...")
-    news_text = fetch_news_via_sdk()
-    if news_text:
-        print(f"  ✓ Got news ({len(news_text)} chars)")
-    else:
-        print("  ⚠ No news available, proceeding without")
-
-    # Step 3: 调用 Agent 生成文章
-    print("\n[3/3] 调用 Babbage Agent 生成文章...")
-    prompt = build_prompt(quote_text, news_text, session_type)
+    # Step 2: 调用 Agent 生成文章
+    print("\n[2/2] 调用 Babbage Agent 生成文章...")
+    prompt = build_prompt(quote_text, None, session_type)
 
     try:
         raw_answer = call_babbage_agent(prompt)
-        print(f"  ✓ Got response ({len(raw_answer)} chars)")
+        print(f"  Got response ({len(raw_answer)} chars)")
     except Exception as e:
-        print(f"  ✗ Agent call failed: {e}", file=sys.stderr)
-        # 保存错误信息
+        print(f"  Agent call failed: {e}", file=sys.stderr)
         save_article(None, str(e), hk_now, session_type, source)
         sys.exit(1)
 
-    # Step 4: 解析并保存
+    # Step 3: 解析并保存
     print("\n[保存] 解析并保存文章...")
     article_data = extract_article_json(raw_answer)
     if article_data:
-        print("  ✓ JSON parsed successfully")
+        print("  JSON parsed successfully")
     else:
-        print("  ⚠ JSON parse failed, saving raw answer")
+        print("  JSON parse failed, saving raw answer")
 
     filename = save_article(article_data, raw_answer, hk_now, session_type, source)
 
     print(f"\n{'='*50}")
-    print(f"完成！文件: {filename}")
+    print(f"完成! 文件: {filename}")
     print(f"{'='*50}")
 
 
