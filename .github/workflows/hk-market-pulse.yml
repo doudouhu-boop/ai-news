@@ -9,10 +9,12 @@ on:
     - cron: '10 8 * * 1-5'   # 香港 16:10 收盘
   workflow_dispatch:           # 支持手动触发（测试用）
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
-    # 只在港股交易日运行（跳过周末，节假日需要手动管理）
     steps:
       - uses: actions/checkout@v4
 
