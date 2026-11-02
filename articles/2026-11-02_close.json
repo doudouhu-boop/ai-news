@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-11-02 17:51:10 HKT",
+  "session": "收盘",
+  "data_source": "eastmoney",
+  "article": [
+    {
+      "code": 0,
+      "message": "success",
+      "data": {
+        "created_at": 1793613072,
+        "elapsed_time": 0.009641621,
+        "error": "出现了一点问题，请稍后再试；如果问题持续，请联系支持，并提供错误码 400000-114863989491078443。",
+        "error_code": 400000,
+        "inputs": {
+          "id": "iyuu6dl5sbcp",
+          "query": "你是港美股券商编辑，写纯事实快讯。当前时段：收盘。\n\n## 行情数据（按成交额降序）\n[\n  {\n    \"code\": \"02800\",\n    \"name\": \"盈富基金\",\n    \"price\": 23.48,\n    \"change_pct\": 0.26,\n    \"turnover\": 13360703232.0,\n    \"turnover_display\": \"133.6亿\"\n  },\n  {\n    \"code\": \"00700\",\n    \"name\": \"腾讯控股\",\n    \"price\": 392.2,\n    \"change_pct\": 2.24,\n    \"turnover\": 8881214464.0,\n    \"turnover_display\": \"88.8亿\"\n  },\n  {\n    \"code\": \"02828\",\n    \"name\": \"恒生中国企业\",\n    \"price\": 81.0,\n    \"change_pct\": 0.22,\n    \"turnover\": 8037465856.0,\n    \"turnover_display\": \"80.4亿\"\n  },\n  {\n    \"code\": \"01810\",\n    \"name\": \"小米集团-W\",\n    \"price\": 28.1,\n    \"change_pct\": 6.12,\n    \"turnover\": 7537293056.0,\n    \"turnover_display\": \"75.4亿\"\n  },\n  {\n    \"code\": \"09988\",\n    \"name\": \"阿里巴巴-W\",\n    \"price\": 99.45,\n    \"change_pct\": 2.47,\n    \"turnover\": 6284208640.0,\n    \"turnover_display\": \"62.8亿\"\n  },\n  {\n    \"code\": \"03033\",\n    \"name\": \"南方恒生科技\",\n    \"price\": 3.76,\n    \"change_pct\": 1.84,\n    \"turnover\": 6204484352.0,\n    \"turnover_display\": \"62.0亿\"\n  },\n  {\n    \"code\": \"06869\",\n    \"name\": \"长飞光纤光缆\",\n    \"price\": 107.2,\n    \"change_pct\": 11.49,\n    \"turnover\": 3838429840.0,\n    \"turnover_display\": \"38.4亿\"\n  },\n  {\n    \"code\": \"00883\",\n    \"name\": \"中国海洋石油\",\n    \"price\": 24.52,\n    \"change_pct\": -0.73,\n    \"turnover\": 3645406528.0,\n    \"turnover_display\": \"36.5亿\"\n  },\n  {\n    \"code\": \"00939\",\n    \"name\": \"建设银行\",\n    \"price\": 10.14,\n    \"change_pct\": -1.17,\n    \"turnover\": 3242782448.0,\n    \"turnover_display\": \"32.4亿\"\n  },\n  {\n    \"code\": \"07709\",\n    \"name\": \"南方东英SK海力士每日杠杆最多2x\",\n    \"price\": 24.36,\n    \"change_pct\": 8.75,\n    \"turnover\": 3105845520.0,\n    \"turnover_display\": \"31.1亿\"\n  },\n  {\n    \"code\": \"00981\",\n    \"name\": \"中芯国际\",\n    \"price\": 43.62,\n    \"change_pct\": 1.49,\n    \"turnover\": 2950764320.0,\n    \"turnover_display\": \"29.5亿\"\n  },\n  {\n    \"code\": \"01299\",\n    \"name\": \"友邦保险\",\n    \"price\": 75.4,\n    \"change_pct\": 0.0,\n    \"turnover\": 2725574496.0,\n    \"turnover_display\": \"27.3亿\"\n  },\n  {\n    \"code\": \"02318\",\n    \"name\": \"中国平安\",\n    \"price\": 50.3,\n    \"change_pct\": 1.13,\n    \"turnover\": 2650987904.0,\n    \"turnover_display\": \"26.5亿\"\n  },\n  {\n    \"code\": \"02513\",\n    \"name\": \"智谱\",\n    \"price\": 480.4,\n    \"change_pct\": -0.66,\n    \"turnover\": 2631685280.0,\n    \"turnover_display\": \"26.3亿\"\n  },\n  {\n    \"code\": \"00005\",\n    \"name\": \"汇丰控股\",\n    \"price\": 133.7,\n    \"change_pct\": -1.47,\n    \"turnover\": 2596302176.0,\n    \"turnover_display\": \"26.0亿\"\n  },\n  {\n    \"code\": \"03690\",\n    \"name\": \"美团-W\",\n    \"price\": 73.05,\n    \"change_pct\": 2.03,\n    \"turnover\": 2506429456.0,\n    \"turnover_display\": \"25.1亿\"\n  },\n  {\n    \"code\": \"03988\",\n    \"name\": \"中国银行\",\n    \"price\": 5.86,\n    \"change_pct\": -4.64,\n    \"turnover\": 2365957888.0,\n    \"turnover_display\": \"23.7亿\"\n  },\n  {\n    \"code\": \"01398\",\n    \"name\": \"工商银行\",\n    \"price\": 7.775,\n    \"change_pct\": -1.52,\n    \"turnover\": 2125002528.0,\n    \"turnover_display\": \"21.3亿\"\n  },\n  {\n    \"code\": \"00992\",\n    \"name\": \"联想集团\",\n    \"price\": 20.94,\n    \"change_pct\": 2.15,\n    \"turnover\": 1848403392.0,\n    \"turnover_display\": \"18.5亿\"\n  },\n  {\n    \"code\": \"01211\",\n    \"name\": \"比亚迪股份\",\n    \"price\": 70.45,\n    \"change_pct\": 3.22,\n    \"turnover\": 1757539968.0,\n    \"turnover_display\": \"17.6亿\"\n  }\n]\n\n## 输出要求\n1. 时段：收盘，正文400-500字，硬上限500字\n2. 只输出JSON，不输出其他任何文字：\n{\"article\":[{\"title\":\"港股收盘｜<15-25字>\",\"abstract\":\"<40字内>\",\"body\":\"<HTML正文>\"}]}\n3. 从数据里找今天最大的2-3件事，每件写一段，其余最后一段1-2句带过\n4. 消息面融入段落，不要单独的\"消息面\"\"要闻\"模块\n5. 写完就结束，不要\"展望\"\"研判\"\"关注\"结尾段\n6. 数字用约数：\"涨近2%\"\"成交逾22亿\"，不要太精确\n7. 用<p>包段落，<b>加粗小标题，不用表格、bullet、markdown\n\n收盘稿最后加TOP10：\n<p><b>成交额TOP10</b></p>\n<p style=\"font-size:14px;color:#555;line-height:2\">\n股票名(代码) 价格港元，涨跌X%，成交XX亿<br/>\n</p>\n\n## 禁用词\n情绪、承压、青睐、追捧、动能、格局、警惕、谨慎、虹吸、避风港、阴云、拖累、防御属性、风险偏好、承压消化、宜、需关注"
+        },
+        "outputs": {},
+        "status": "failed",
+        "workflow_run_id": "114863989491078443"
+      }
+    }
+  ],
+  "status": "success"
+}
