@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13 17:53:14 HKT",
+  "generated_at": "2026-11-13 20:03:28 HKT",
   "session": "收盘",
   "data_source": "eastmoney",
   "article": [
@@ -7,9 +7,9 @@
       "code": 0,
       "message": "success",
       "data": {
-        "created_at": 1794563597,
-        "elapsed_time": 0.010670469,
-        "error": "出现了一点问题，请稍后再试；如果问题持续，请联系支持，并提供错误码 400000-116458704707688314。",
+        "created_at": 1794571411,
+        "elapsed_time": 0.013305032,
+        "error": "出现了一点问题，请稍后再试；如果问题持续，请联系支持，并提供错误码 400000-116471814659151446。",
         "error_code": 400000,
         "inputs": {
           "id": "iyuu6dl5sbcp",
@@ -17,7 +17,7 @@
         },
         "outputs": {},
         "status": "failed",
-        "workflow_run_id": "116458704707688314"
+        "workflow_run_id": "116471814659151446"
       }
     }
   ],
